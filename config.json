@@ -1,9 +1,7 @@
 {
-    "bancoDados": {
-        "host": "localhost",
-        "port": 5432,
-        "user": "postgres",
-        "password": "senha",
-        "database": "minha_base_de_dados"
-      }
+  "host": "localhost",
+  "port": 5432,
+  "user": "postgres",
+  "password": "loko22sete",
+  "database": "sample4doc"
 }

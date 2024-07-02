@@ -1,8 +1,8 @@
 package models
 
-// Produto representa um produto da API
-type Produto struct {
+// Product representa um product da API
+type Product struct {
 	ID    int     `json:"id"`
-	Nome  string  `json:"nome"`
-	Preco float64 `json:"preco"`
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
 }

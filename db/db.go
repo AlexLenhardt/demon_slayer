@@ -30,13 +30,13 @@ func LoadConfig() (*DBConfig, error) {
 	if err != nil {
 		return nil, fmt.Errorf("erro ao deserializar as configurações do banco de dados: %w", err)
 	}
-
+	println(&config)
 	return &config, nil
 }
 
 // Converte as configurações do DBConfig em uma string de conexão válida para o PostgreSQL
 func (config *DBConfig) ToDBURL() string {
-	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s", config.User, config.Password, config.Host, config.Port, config.Database)
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", config.User, config.Password, config.Host, config.Port, config.Database)
 }
 
 // Abre a conexão com o banco de dados PostgreSQL
@@ -47,6 +47,7 @@ func ConectarDB() (*sql.DB, error) {
 	}
 
 	dbURL := config.ToDBURL()
+	fmt.Println(dbURL)
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao abrir conexão com o banco de dados: %w", err)

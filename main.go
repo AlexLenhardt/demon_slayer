@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 	"sample4doc_go/db"
@@ -12,28 +11,22 @@ import (
 )
 
 func main() {
-	// Carrega as configurações do banco de dados
-	config, err := db.LoadConfig()
-	if err != nil {
-		panic(err)
-	}
-
 	// Abre a conexão com o banco de dados usando as configurações carregadas
-	db, err := sql.Open("postgres", config.ToDBURL())
+	db, err := db.ConectarDB()
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
 
-	// Criar instância do serviço de produtos
-	produtoService := service.NewProdutosServiceImpl(db)
+	// Criar instância do serviço de products
+	productService := service.NewProductsServiceImpl(db)
 
-	// Criar instância do handler de produtos
-	produtosHandler := handlers.NewProdutosHandler(produtoService)
+	// Criar instância do handler de products
+	productsHandler := handlers.NewProductsHandler(productService)
 
 	// Criar roteador e registrar handlers
 	router := mux.NewRouter()
-	router.HandleFunc("/produtos", produtosHandler.ListarProdutos).Methods("GET")
+	router.HandleFunc("/products", productsHandler.ListarProducts).Methods("GET")
+
 	// ... (Registrar outros handlers para os demais endpoints)
 
 	// Iniciar servidor HTTP

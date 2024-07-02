@@ -1,26 +1,48 @@
 package service
 
 import (
+	"context"
 	"database/sql"
-	"net/http"
+	"sample4doc_go/models"
 )
 
-// ProdutoService define a interface do serviço de produtos
-type ProdutoService interface {
-	ListarProdutos(w http.ResponseWriter, r *http.Request)
+// ProductService define a interface do serviço de products
+type ProductService interface {
+	ListarProducts(ctx context.Context) ([]models.Product, error)
 }
 
-// ProdutosServiceImpl implementa a interface ProdutoService
-type ProdutosServiceImpl struct {
+// ProductsServiceImpl implementa a interface ProductService
+type ProductsServiceImpl struct {
 	db *sql.DB // Conexão com o banco de dados
 }
 
-// NovoProdutosServiceImpl cria uma nova instância do serviço
-func NewProdutosServiceImpl(db *sql.DB) *ProdutosServiceImpl {
-	return &ProdutosServiceImpl{db: db}
+// NovoProductsServiceImpl cria uma nova instância do serviço
+func NewProductsServiceImpl(db *sql.DB) *ProductsServiceImpl {
+	return &ProductsServiceImpl{db: db}
 }
 
-// Implementar os métodos da interface ProdutoService:
-func (service *ProdutosServiceImpl) ListarProdutos(w http.ResponseWriter, r *http.Request) {
-	// ... (Implementação da lógica para listar produtos)
+// Implementar os métodos da interface ProductService:
+func (service *ProductsServiceImpl) ListarProducts(ctx context.Context) ([]models.Product, error) {
+	rows, err := service.db.QueryContext(ctx, "SELECT id, name, price FROM public.user")
+	if err != nil {
+		return nil, err
+	}
+
+	var products []models.Product
+	for rows.Next() {
+		var product models.Product
+		err = rows.Scan(
+			&product.ID,
+			&product.Name,
+			&product.Price,
+		)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, product)
+	}
+
+	rows.Close()
+
+	return products, nil
 }
