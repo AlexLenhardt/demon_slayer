@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"sample4doc_go/auth"
 	"sample4doc_go/db"
 	"sample4doc_go/handlers"
 	"sample4doc_go/service"
@@ -17,15 +18,19 @@ func main() {
 		panic(err)
 	}
 
-	// Criar instância do serviço de products
-	productService := service.NewProductsServiceImpl(db)
+	auth.NewAuth()
 
-	// Criar instância do handler de products
-	productsHandler := handlers.NewProductsHandler(productService)
+	// Criar instância do serviço de products
+	fooService := service.NewFooServiceImpl(db)
+	userService := service.NewUserServiceImpl(db)
+
+	// Criar instância do handler de foos
+	fooHandler := handlers.NewFooHandler(fooService)
+	handlers.NewUserHandler(userService)
 
 	// Criar roteador e registrar handlers
 	router := mux.NewRouter()
-	router.HandleFunc("/products", productsHandler.ListarProducts).Methods("GET")
+	router.HandleFunc("/foo", fooHandler.ListarFoo).Methods("GET")
 
 	// ... (Registrar outros handlers para os demais endpoints)
 
